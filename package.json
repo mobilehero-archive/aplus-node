@@ -1,6 +1,6 @@
 {
   "name": "alloy-nodejs",
-  "version": "0.0.3-beta.2",
+  "version": "0.0.3-beta.3",
   "description": "Alloy+ Plugin for making Alloy code use the nodejs style module resolution",
   "keywords": [],
   "homepage": "git://github.com/mobilehero/alloy-nodejs",
