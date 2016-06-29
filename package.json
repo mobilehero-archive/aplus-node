@@ -1,0 +1,36 @@
+{
+  "name": "alloy-nodejs",
+  "version": "0.0.3-beta.1",
+  "description": "Alloy+ Plugin for making Alloy code use the nodejs style module resolution",
+  "keywords": [],
+  "homepage": "git://github.com/mobilehero/alloy-nodejs",
+  "bugs": {
+    "url": "https://github.com/mobilehero/alloy-nodejs/issues",
+    "email": "info@mobilehero.me"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Brenton House",
+    "email": "brenton.house@gmail.com",
+    "url": "https://github.com/brentonhouse"
+  },
+  "main": "./alloy-nodejs.js",
+  "scripts": {
+    "add": "git add -A",
+    "add-version": "npm run add && node scripts/version",
+    "push": "npm run add-version --",
+    "postpush": "git push",
+    "autopull": "node scripts/autopull"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mobilehero/alloy-nodejs.git"
+  },
+  "devDependencies": {
+    "lodash": "^4.13.1",
+    "semver": "^5.1.0"
+  },
+  "engines": {
+    "node": ">=0.10"
+  }
+}
