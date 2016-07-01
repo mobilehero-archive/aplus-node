@@ -9,10 +9,10 @@
  *                  mobile solutions for everyday heroes
  *                                                                    
  * @file 
- * Alloy+ => Alloy+ plugin for executing npm during build process
+ * Alloy+ plugin for executing npm during build process
  * 
  * @module 
- * alloy-npm
+ * @aplus/node
  * 
  * @author 
  * Brenton House <brenton.house@gmail.com>
@@ -30,10 +30,10 @@ var path = require("path");
 var _ = require('lodash');
 var logger;
 
-var fix_require = function(params, directory) {
+function plugin(params) {
 
 	logger = params.logger;
-	params.dirname = params.dirname || params.event.dir.lib;
+	params.dirname = params.dirname || params.event.dir.resourcesPlatform;
 
 	_.defaults(params.config, {
 		modules: {}
@@ -41,11 +41,10 @@ var fix_require = function(params, directory) {
 
 	logger.trace("fixing alloy require in directory: " + params.dirname);
 	logger.trace(JSON.stringify(params.config, null, 2));
-
 	var r = require('./resolver/resolve-fix');
-	var resolveFix = new r(directory, params.config.modules, logger);
+	var resolveFix = new r(params.dirname, params.config.modules, logger);
 	var registry = JSON.stringify(resolveFix.registry, null, 4);
 	//console.warn(registry);
 }
 
-module.exports = fix_require;
+module.exports = plugin;

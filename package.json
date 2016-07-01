@@ -1,11 +1,19 @@
 {
-  "name": "alloy-nodejs",
-  "version": "0.0.3-beta.3",
+  "name": "@aplus/node",
+  "version": "0.0.5-beta.1",
   "description": "Alloy+ Plugin for making Alloy code use the nodejs style module resolution",
-  "keywords": [],
-  "homepage": "git://github.com/mobilehero/alloy-nodejs",
+  "keywords": [
+    "Appcelerator",
+    "Alloy",
+    "MobileHero",
+    "Alloy+",
+    "aplus",
+    "plugin",
+    "node"
+  ],
+  "homepage": "git://github.com/mobilehero/aplus-node",
   "bugs": {
-    "url": "https://github.com/mobilehero/alloy-nodejs/issues",
+    "url": "https://github.com/mobilehero/aplus-node/issues",
     "email": "info@mobilehero.me"
   },
   "license": "MIT",
@@ -14,7 +22,7 @@
     "email": "brenton.house@gmail.com",
     "url": "https://github.com/brentonhouse"
   },
-  "main": "./alloy-nodejs.js",
+  "main": "./aplus-node.js",
   "scripts": {
     "add": "git add -A",
     "add-version": "npm run add && node scripts/version",
@@ -24,7 +32,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/mobilehero/alloy-nodejs.git"
+    "url": "git://github.com/mobilehero/aplus-node.git"
   },
   "devDependencies": {
     "lodash": "^4.13.1",

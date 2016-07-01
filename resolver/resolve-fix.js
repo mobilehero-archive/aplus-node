@@ -10,15 +10,9 @@ module.exports = function(rootpath, registry, logger) {
 	_.defaults(registry, {
 		files: [],
 		directories: [],
-		core: []
+		core: [],
+		fallback: [],
 	});
-	// if(!registry) {
-	// 	registry = {
-	// 		files: [],
-	// 		directories: [],
-	// 		core: []
-	// 	};
-	// }
 	logger = logger || console;
 
 	function injectCode() {
@@ -27,8 +21,10 @@ module.exports = function(rootpath, registry, logger) {
 		var source = fs.readFileSync(fullpath, 'utf8');
 		var test = /\/\/ALLOY-RESOLVER/.test(source);
 		logger.error("CODE INJECTED ALREADY: " + test);
-		source = source.replace(/(var\s+Alloy[^;]+;)/g, "$1\n//ALLOY-RESOLVER\nAlloy.Resolver=require('resolver');\n");
-		fs.writeFileSync(fullpath, source);
+		if(!test) {
+			source = source.replace(/(var\s+Alloy[^;]+;)/g, "$1\n//ALLOY-RESOLVER\nvar process=require('/process');\nAlloy.resolve=new (require('/resolver'))().resolve;\n");
+			fs.writeFileSync(fullpath, source);
+		}
 	}
 
 	function fixFiles() {
@@ -140,6 +136,7 @@ module.exports = function(rootpath, registry, logger) {
 
 	fs.copySync(path.join(__dirname, "resolver.js"), path.join(rootpath, "resolver.js"));
 	fs.copySync(path.join(__dirname, "path.js"), path.join(rootpath, "path.js"));
+	fs.copySync(path.join(__dirname, "process.js"), path.join(rootpath, "process.js"));
 
 	loadFiles();
 
@@ -150,6 +147,8 @@ module.exports = function(rootpath, registry, logger) {
 	injectCode();
 	fixFiles();
 	writeRegistry();
+
+	console.info(JSON.stringify(registry,null,2));
 
 	Object.defineProperty(this, "registry", {
 		get: function() {

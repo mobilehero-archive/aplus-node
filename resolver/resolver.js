@@ -6,82 +6,71 @@
 var _ = require("./alloy/underscore");
 var path = require("path");
 
-if (!_.contains) {
-    _.mixin({
-        contains: _.includes
-    });
+if(!_.contains) {
+	_.mixin({
+		contains: _.includes
+	});
 }
 
 /**
  * Registry for storing all the files, directories, and core modules to be used by the application.
  */
 var registry = {
-    files: [],
-    directories: [],
-    core: []
+	files: [],
+	directories: [],
+	core: [],
+	fallback: [],
 };
 
 var logger = console;
 
-var ensureCore1 = function(key, value) {
-
-    if (!_.find(registry.core, function(item) {
-            return item.id === key;
-        })) {
-        var item = {};
-        item[key] = value;
-        registry.core.push(item);
-        item = null;
-    }
-}
-
 var ensureCore = function(key, value) {
 
-    if (!_.find(registry.core, function(item) {
-            return item.id === key;
-        })) {
-        registry.core.push({
-            id: key,
-            path: value
-        });
-    }
+	if(!_.find(registry.core, function(item) {
+			return item.id === key;
+		})) {
+		registry.core.push({
+			id: key,
+			path: value
+		});
+	}
 }
 
 var resolver = function resolver(_registry, _logger) {
 
-    // _registry = _registry || {};
+	if(_registry) {
+		registry = _.defaults(_registry, {
+			files: [],
+			directories: [],
+			core: [],
+		});
+	}
 
-    if (_registry) {
-        registry = _.defaults(_registry, {
-            files: [],
-            directories: [],
-            core: [],
-        });
-    }
+	_logger && (logger = _logger);
 
-    _logger && (logger = _logger);
+	ensureCore("path", "/path");
+	ensureCore("alloy", "/alloy");
+	ensureCore("resolver", "/resolver");
 
-    ensureCore("path", "/path");
-    ensureCore("alloy", "/alloy");
-    ensureCore("resolver", "/resolver");
-    ensureCore("bluebird", "@mobile/bluebird");
-    ensureCore("lodash", "@mobile/lodash");
-    // ensureCore("alloy/underscore", "@mobile/lodash");
+	_.forEach(registry.core, function(core) {
+		core.path = _resolve(core.path, "/");
+		logger.info("core.path: " + core.path);
+	});
 
-    _.forEach(registry.core, function(core) {
-        core.path = _resolve(core.path, "/");
-        logger.info("core.path: " + core.path);
-    });
+	_.forEach(registry.fallback, function(fallback) {
+		fallback.path = _resolve(fallback.path, "/");
+		logger.info("fallback.path: " + fallback.path);
+	});
 
-    Object.defineProperty(this, "registry", {
-        get: function() {
-           // logger.info("******************");
-            //logger.info(registry);
-            return _.clone(registry);
-        },
-        enumerable: true,
-        configurable: false
-    });
+	Object.defineProperty(this, "registry", {
+		get: function() {
+			// logger.info("******************");
+			//logger.info(registry);
+			return _.clone(registry);
+		},
+		enumerable: true,
+		configurable: false
+	});
 
 };
 
@@ -130,84 +119,68 @@ module.exports = resolver;
 //      5. return DIRS
 
 
-// var replaceBackSlashes = function replaceBackSlashes(str) {
-//     var isExtendedLengthPath = /^\\\\\?\\/.test(str);
-//     var hasNonAscii = /[^\x00-\x80]+/.test(str);
-
-//     if (isExtendedLengthPath || hasNonAscii) {
-//         return str;
-//     }
-
-//     return str.replace(/\\/g, '/');
-// };
-
-// var findFiles = function findFiles(rootpath, extensions) {
-//     var extensions = extensions || ['js', 'json'];
-//     var rx = new RegExp('^.+\.(' + extensions.join('|') + ')$');
-
-//     var files = _.map(wrench.readdirSyncRecursive(rootpath), function(filename) {
-//         return path.posix.sep + replaceBackSlashes(filename);
-//     });
-
-//     return _.filter(files, function(f) {
-//         return rx.test(f) && !fs.statSync(path.join(rootpath, f)).isDirectory();
-//     }) || [];
-// };
-
-// resolver.prototype.export = function() {
-//     return _.clone(__registry);
-// };
-
-
-
 // Alloy doesn't like it when you include the file extension...
 function convert_to_alloy_path(resolved_path) {
-    var parsed_path = path.posix.parse(resolved_path);
-    return path.posix.join(parsed_path.dir, parsed_path.name);
+	var parsed_path = path.posix.parse(resolved_path);
+	return path.posix.join(parsed_path.dir, parsed_path.name);
 }
 
 function _resolve(request, basepath) {
-    basepath = basepath || path.posix.sep;
+	basepath = basepath || path.posix.sep;
 
-    var core_module = load_core_modules(request);
-    if (core_module) {
-        return convert_to_alloy_path(core_module);
-    }
+	var core_module = load_core_modules(request);
+	if(core_module) {
+		return convert_to_alloy_path(core_module);
+	}
 
-    var start = request.substring(0, 1);
-    if (start === '.' || start === '/') {
+	var start = request.substring(0, 1);
+	if(start === '.' || start === '/') {
 
-        var file_module = load_as_file(request, basepath);
-        if (file_module) {
-            return convert_to_alloy_path(file_module);
-        }
-        var directory_module = load_as_directory(request, basepath);
-        if (directory_module) {
-            return convert_to_alloy_path(directory_module);
-        }
-    }
+		var file_module = load_as_file(request, basepath);
+		if(file_module) {
+			return convert_to_alloy_path(file_module);
+		}
+		var directory_module = load_as_directory(request, basepath);
+		if(directory_module) {
+			return convert_to_alloy_path(directory_module);
+		}
+	}
 
-    var node_module = load_node_modules(request, basepath);
-    if (node_module) {
-        return convert_to_alloy_path(node_module);
-    }
+	var node_module = load_node_modules(request, basepath);
+	if(node_module) {
+		return convert_to_alloy_path(node_module);
+	}
 
-    // if module id can't be resolved we are using the passed in module id as-is in order to 
-    // maintain backwards compatibility with older version of Alloy.
-    return request;
+	var fallback_module = load_fallback_modules(request);
+	if(fallback_module) {
+		return convert_to_alloy_path(fallback_module);
+	}
+
+	// if module id can't be resolved we are using the passed in module id as-is in order to 
+	// maintain backwards compatibility with older version of Alloy.
+	return request;
 };
 
 resolver.prototype.resolve = _.memoize(_resolve, function(request, basepath) {
-    return request + "::" + basepath;
+	return request + "::" + basepath;
 });
 
 function load_core_modules(request) {
-    var module_path = _.find(registry.core, function(item) {
-        return item.id === request;
-    });
-    if (module_path) {
-        return module_path.path;
-    }
+	var module_path = _.find(registry.core, function(item) {
+		return item.id === request;
+	});
+	if(module_path) {
+		return module_path.path;
+	}
+};
+
+function load_fallback_modules(request) {
+	var module_path = _.find(registry.fallback, function(item) {
+		return item.id === request;
+	});
+	if(module_path) {
+		return module_path.path;
+	}
 };
 
 //  LOAD_AS_FILE(X)
@@ -218,26 +191,26 @@ function load_core_modules(request) {
 
 function load_as_file(request, startpath) {
 
-    var module_path;
-    var resolved_path = path.posix.resolve(startpath, request);
-    _.includes(registry.files, resolved_path) && (module_path = resolved_path);
-    if (module_path) {
-        // logger.trace("file found: " + module_path);
-        return module_path;
-    }
+	var module_path;
+	var resolved_path = path.posix.resolve(startpath, request);
+	_.includes(registry.files, resolved_path) && (module_path = resolved_path);
+	if(module_path) {
+		// logger.trace("file found: " + module_path);
+		return module_path;
+	}
 
-    var extension = path.extname(request);
-    if (!extension) {
-        var exts = [".js", ".json"];
-        _.forEach(exts, function(ext) {
-            resolved_path = path.posix.resolve(startpath, request + ext);
-            _.includes(registry.files, resolved_path) && (module_path = resolved_path);
-            if (!module_path) {
-                return !module_path;
-            }
-        });
-    }
-    return module_path;
+	var extension = path.extname(request);
+	if(!extension) {
+		var exts = [".js", ".json"];
+		_.forEach(exts, function(ext) {
+			resolved_path = path.posix.resolve(startpath, request + ext);
+			_.includes(registry.files, resolved_path) && (module_path = resolved_path);
+			if(!module_path) {
+				return !module_path;
+			}
+		});
+	}
+	return module_path;
 };
 
 //  LOAD_AS_DIRECTORY(X)
@@ -250,13 +223,13 @@ function load_as_file(request, startpath) {
 //      4. If X/index.node is a file, load X/index.node as binary addon.  STOP
 
 function load_as_directory(request, startpath) {
-    var resolved_path = path.posix.resolve(startpath, request);
-    var module_path = _.find(registry.directories, function(item) {
-        return item.id === resolved_path;
-    });
-    if (module_path) {
-        return module_path.path;
-    }
+	var resolved_path = path.posix.resolve(startpath, request);
+	var module_path = _.find(registry.directories, function(item) {
+		return item.id === resolved_path;
+	});
+	if(module_path) {
+		return module_path.path;
+	}
 };
 
 //  LOAD_NODE_MODULES(X, START)
@@ -266,24 +239,24 @@ function load_as_directory(request, startpath) {
 //          b. LOAD_AS_DIRECTORY(DIR/X)
 
 function load_node_modules(request, startpath) {
-    var resolved_path;
-    var nodepaths = node_modules_paths(startpath);
+	var resolved_path;
+	var nodepaths = node_modules_paths(startpath);
 
-    _.forEach(nodepaths, function(nodepath) {
-        resolved_path = load_as_file(request, nodepath);
-        return !resolved_path;
-    });
+	_.forEach(nodepaths, function(nodepath) {
+		resolved_path = load_as_file(request, nodepath);
+		return !resolved_path;
+	});
 
-    if (resolved_path) {
-        return resolved_path;
-    }
+	if(resolved_path) {
+		return resolved_path;
+	}
 
-    _.forEach(nodepaths, function(nodepath) {
-        resolved_path = load_as_directory(request, nodepath);
-        return !resolved_path;
-    });
+	_.forEach(nodepaths, function(nodepath) {
+		resolved_path = load_as_directory(request, nodepath);
+		return !resolved_path;
+	});
 
-    return resolved_path;
+	return resolved_path;
 };
 
 // Copyright Joyent, Inc. and other Node contributors.
@@ -310,21 +283,21 @@ function load_node_modules(request, startpath) {
 var splitRe = /\//;
 
 function node_modules_paths(from) {
-    // guarantee that 'from' is absolute.
-    from = path.posix.resolve(from);
+	// guarantee that 'from' is absolute.
+	from = path.posix.resolve(from);
 
-    // note: this approach *only* works when the path is guaranteed
-    // to be absolute.  Doing a fully-edge-case-correct path.split
-    // that works on both Windows and Posix is non-trivial.
-    var paths = [];
-    var parts = from.split(splitRe);
+	// note: this approach *only* works when the path is guaranteed
+	// to be absolute.  Doing a fully-edge-case-correct path.split
+	// that works on both Windows and Posix is non-trivial.
+	var paths = [];
+	var parts = from.split(splitRe);
 
-    for (var tip = parts.length - 1; tip >= 0; tip--) {
-        // don't search in .../node_modules/node_modules
-        if (parts[tip] === 'node_modules') continue;
-        var dir = parts.slice(0, tip + 1).concat('node_modules').join(path.posix.sep);
-        paths.push(dir);
-    }
+	for(var tip = parts.length - 1; tip >= 0; tip--) {
+		// don't search in .../node_modules/node_modules
+		if(parts[tip] === 'node_modules') continue;
+		var dir = parts.slice(0, tip + 1).concat('node_modules').join(path.posix.sep);
+		paths.push(dir);
+	}
 
-    return paths;
+	return paths;
 };
