@@ -133,7 +133,7 @@ any generated files have already been placed in the resource folder._
 
 ## Other Alloy+ Plugins 
 
-> ** Coming Soon! :mega: **
+> **Coming Soon! :mega:**
 
 - [`underscore`][]: Fix invalid usages of underscore.js within Alloy source code
 - [`npm`][]: Execute npm during the Alloy build process
