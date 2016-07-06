@@ -1,6 +1,6 @@
 {
   "name": "@aplus/node",
-  "version": "0.0.5-beta.2",
+  "version": "0.0.5-beta.3",
   "description": "Alloy+ Plugin for making Alloy code use the nodejs style module resolution",
   "keywords": [
     "Appcelerator",
@@ -25,8 +25,10 @@
   "main": "./aplus-node.js",
   "scripts": {
     "add": "git add -A",
-    "add-version": "npm run add && node scripts/version",
-    "push": "npm run add-version --",
+    "preadd-version": "npm run add",
+    "add-version": "node scripts/version",
+    "push": "npm run commit --",
+    "commit": "npm run add-version --",
     "postpush": "git push",
     "autopull": "node scripts/autopull"
   },
