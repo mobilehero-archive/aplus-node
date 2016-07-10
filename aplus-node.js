@@ -39,12 +39,18 @@ function plugin(params) {
 		modules: {}
 	});
 
-	logger.trace("fixing alloy require in directory: " + params.dirname);
-	logger.trace(JSON.stringify(params.config, null, 2));
+	logger.debug("fixing alloy require in directory: " + params.dirname);
+	// logger.trace(JSON.stringify(params.config, null, 2));
 	var r = require('./resolver/resolve-fix');
 	var resolveFix = new r(params.dirname, params.config.modules, logger);
 	var registry = JSON.stringify(resolveFix.registry, null, 4);
 	//console.warn(registry);
 }
 
-module.exports = plugin;
+module.exports.execute = plugin;
+module.exports.tasks = [
+	{
+		"module": module.id,
+		"events": "postcompile"
+	}
+]

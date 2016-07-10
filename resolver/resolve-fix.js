@@ -20,7 +20,7 @@ module.exports = function(rootpath, registry, logger) {
 		var fullpath = path.join(rootpath, "app.js");
 		var source = fs.readFileSync(fullpath, 'utf8');
 		var test = /\/\/ALLOY-RESOLVER/.test(source);
-		logger.error("CODE INJECTED ALREADY: " + test);
+		logger.trace("CODE INJECTED ALREADY: " + test);
 		if(!test) {
 			source = source.replace(/(var\s+Alloy[^;]+;)/g, "$1\n//ALLOY-RESOLVER\nvar process=require('/process');\nAlloy.resolve=new (require('/resolver'))().resolve;\n");
 			fs.writeFileSync(fullpath, source);
@@ -34,7 +34,7 @@ module.exports = function(rootpath, registry, logger) {
 			var basepath = path.posix.dirname(file);
 			var basefile = path.posix.resolve(file);
 			var source = fs.readFileSync(fullpath, 'utf8');
-			logger.info(fullpath)
+			logger.trace("fixing file: " + fullpath);
 			var requireRegex = /(require)\s*\(((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*)\)/g;
 			var staticRequireRegex = /(require)(?:\(\s*['"])([^'"]+)(?:['"]\s*\))/g;
 
@@ -83,7 +83,7 @@ module.exports = function(rootpath, registry, logger) {
 	};
 
 	function loadFiles(extensions) {
-		logger.info("inside loadFiles()");
+		logger.trace("inside loadFiles()");
 		var allfiles = findFiles(extensions);
 		var filepaths = _.filter(allfiles, function(filepath) {
 			return !/.+(package\.json)/.test(filepath);
@@ -128,7 +128,6 @@ module.exports = function(rootpath, registry, logger) {
 		logger.info("inside writeRegistry()");
 		var filepath = path.join(rootpath, "resolver.js");
 		var content = fs.readFileSync(filepath, 'utf8');
-		// var regex = /(require\(['"])alloy\/underscore(['"]\))\._/g;
 		var regex = /(var\s+registry\s+=\s+)[^;]*(;)/g;
 		var modified = content.replace(regex, "$1" + JSON.stringify(registry) + "$2");
 		fs.writeFileSync(filepath, modified);
@@ -148,7 +147,7 @@ module.exports = function(rootpath, registry, logger) {
 	fixFiles();
 	writeRegistry();
 
-	console.info(JSON.stringify(registry,null,2));
+	// console.debug(JSON.stringify(registry,null,2));
 
 	Object.defineProperty(this, "registry", {
 		get: function() {

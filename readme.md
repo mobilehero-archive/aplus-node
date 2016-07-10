@@ -82,12 +82,12 @@ npm install --save @aplus/node
 To use this installed plugin in your app, merge the following to your app's `config.json` file:
 
 ```json
-	"tasks": {
-		"postcompile": [ "@aplus/node" ]
+	{
+		"tasks": [ "@aplus/node" ]
 	}
 ```
 
->_Most often, you will probably want to run these in the `postcompile` stage of the Alloy build process so that 
+>_In default mode, the task will run in the `postcompile` stage of the Alloy build process so that 
 any generated files have already been placed in the resource folder._
 
 ### Examples
@@ -106,6 +106,7 @@ any generated files have already been placed in the resource folder._
 		]
 	},
 ```
+
 **Add a fallback module: bluebird** 
 ```json
 	"modules": {
