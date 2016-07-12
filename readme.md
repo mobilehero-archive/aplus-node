@@ -32,6 +32,7 @@
 ## Overview
 
 ### Why should I use this plugin?
+
 [Alloy+][] plugin [`node`][] is a plugin for making Alloy use the nodejs style of module resolution when using `require()`.
 This allows you to install (via npm) and use many packages that are available today for node.js applications.
 
@@ -95,7 +96,8 @@ any generated files have already been placed in the resource folder._
 **Fix require resolve issues in the Platform-specific resource folder**  
 &nbsp;&nbsp;&nbsp;&nbsp;`"postcompile": [ "@aplus/node" ]`
 
-**Add a core module: mycore**  
+**Add a core module: mycore**
+
 ```json
 	"modules": {
 		"core": [
@@ -107,7 +109,8 @@ any generated files have already been placed in the resource folder._
 	},
 ```
 
-**Add a fallback module: bluebird** 
+**Add a fallback module: bluebird**
+
 ```json
 	"modules": {
 		"fallback": [
@@ -132,28 +135,31 @@ any generated files have already been placed in the resource folder._
 - [ ] Requiring a module with concatenated string -- `require('lo' + 'dash')`
 
 
-## Other Alloy+ Plugins 
+## Other Alloy+ Plugins
 
 > **Coming Soon! :mega:**
 
-- [`underscore`][]: Fix invalid usages of underscore.js within Alloy source code
-- [`npm`][]: Execute npm during the Alloy build process
 - [`babel`][]: Run babel transformations on your code during the build process
 - [`es6`][]: Use ES6/ES2015 code in your apps via babel transformations!
+- [`node`][]: Make `require` statements in your app support nodejs packages installed via npm
+- [`npm`][]: Execute npm during the Alloy build process
+- [`underscore`][]: Fix some issues with the usage of underscore in Alloy and allow upgrading to lodash
 
 
 _You can also search for more plugins developed by the community._
 
 ## Need Help?
 
-Please [submit an issue](https://github.com/mobilehero/aplus-node/issues) on GitHub and provide information about your setup.
+Please [submit an issue](https://github.com/mobilehero/aplus-node/issues) on GitHub and provide
+information about your setup.
 
 ## License
 
 [![](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)]()
 
-This project is licensed under the terms of the MIT license. See the [license.md](https://github.com/mobilehero/aplus-node/blob/master/license.md)  file.
-This means you have full access to the source code and can modify it to fit your own needs. 
+This project is licensed under the terms of the MIT license.
+See the [license.md](https://github.com/mobilehero/aplus-node/blob/master/license.md)  file.
+This means you have full access to the source code and can modify it to fit your own needs.
 
 ## Legal
 

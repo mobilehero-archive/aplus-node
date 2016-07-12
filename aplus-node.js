@@ -42,7 +42,7 @@ function plugin(params) {
 	logger.debug("fixing alloy require in directory: " + params.dirname);
 	// logger.trace(JSON.stringify(params.config, null, 2));
 	var r = require('./resolver/resolve-fix');
-	var resolveFix = new r(params.dirname, params.config.modules, logger);
+	var resolveFix = new r(params.dirname, params.config.modules, params.config.includes, logger);
 	var registry = JSON.stringify(resolveFix.registry, null, 4);
 	//console.warn(registry);
 }
