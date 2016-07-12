@@ -159,10 +159,10 @@ This means you have full access to the source code and can modify it to fit your
 
 Superhero Studios Incorporated and this project are in no way affiliated with any of the following companies:
 
-* _Appcelerator, Inc_
-* _Axway Inc_
-* _Apple Inc_
-* _Google Inc_
+- _Appcelerator, Inc_
+- _Axway Inc_
+- _Apple Inc_
+- _Google Inc_
 
 _Alloy is developed by Appcelerator and the community and is Copyright (c) 2012 by Appcelerator, Inc. All Rights Reserved. 
 Alloy is made available under the Apache Public License, version 2. See their [LICENSE](https://github.com/appcelerator/alloy/blob/master/LICENSE) file for more information._

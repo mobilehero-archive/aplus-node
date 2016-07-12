@@ -1,6 +1,6 @@
 {
   "name": "@aplus/node",
-  "version": "0.0.5-beta.5",
+  "version": "0.0.5-beta.6",
   "description": "Alloy+ Plugin for making Alloy code use the nodejs style module resolution",
   "keywords": [
     "Appcelerator",
