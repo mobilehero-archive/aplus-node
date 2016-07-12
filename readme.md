@@ -93,33 +93,53 @@ any generated files have already been placed in the resource folder._
 
 ### Examples
 
-**Fix require resolve issues in the Platform-specific resource folder**  
+**Fix require resolve issues in the Platform-specific resource folder**
+
 &nbsp;&nbsp;&nbsp;&nbsp;`"postcompile": [ "@aplus/node" ]`
+
+**Process all `.js` and `.json` files but skip `backbone.js`**
+
+```json
+	{
+		"tasks": [
+			{
+				"module": "@aplus/node",
+				"includes": [ "**/*.js", "**/*.json","!backbone.js" ]
+			}
+		]
+	}
+```
+
 
 **Add a core module: mycore**
 
 ```json
-	"modules": {
-		"core": [
-			{
-				"id": "mycore",
-				"path": "path/to/mycore"
-			}
-		]
-	},
+	{
+		"modules": {
+			"core": [
+				{
+					"id": "mycore",
+					"path": "path/to/mycore"
+				}
+			]
+		}
+	}
 ```
 
 **Add a fallback module: bluebird**
 
+
 ```json
-	"modules": {
-		"fallback": [
-			{
-				"id": "bluebird",
-				"path": "@mobile/bluebird"
-			}
-		]
-	},
+	{
+		"modules": {
+			"fallback": [
+				{
+					"id": "bluebird",
+					"path": "@mobile/bluebird"
+				}
+			]
+		}
+	}
 ```
 
 ### Supported scenarios
@@ -127,12 +147,12 @@ any generated files have already been placed in the resource folder._
 >The following scenarios are valid and should work.  Check the status below to see which have been tested and are working in the current build.
 
 - [X] Requiring a module from the alloy directory -- `require('alloy/moment')`
-- [ ] Requiring a module from the root node_modules directory  -- `require('@mobile/bluebird')`
-- [ ] Requiring core module (path) -- `require('path')`
-- [ ] Requiring a module with index.js -- `require('test')`
-- [ ] Requiring a module with `main` property in `package.json` -- `require('test')`
-- [ ] Requiring a module with relative path -- `require('./mymodule')`
-- [ ] Requiring a module with concatenated string -- `require('lo' + 'dash')`
+- [X] Requiring a module from the root node_modules directory  -- `require('@mobile/bluebird')`
+- [X] Requiring core module (path) -- `require('path')`
+- [X] Requiring a module with index.js -- `require('test')`
+- [X] Requiring a module with `main` property in `package.json` -- `require('test')`
+- [X] Requiring a module with relative path -- `require('./mymodule')`
+- [X] Requiring a module with concatenated string -- `require('lo' + 'dash')`
 
 
 ## Other Alloy+ Plugins
