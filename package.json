@@ -1,6 +1,6 @@
 {
   "name": "@aplus/node",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "⭐  Axway Amplify module for using Node.js code with Appcelerator Titanium SDK",
   "keywords": [
     "axway",
@@ -66,10 +66,10 @@
     "@geek/tld": "^2.0.1-1",
     "@nativeloop/mobile": "^1.0.19",
     "@titanium/appcelerator": "^6.0.22",
-    "@titanium/authentication": "^1.0.33",
+    "@titanium/authentication": "^1.0.34",
     "@titanium/authentication-mock": "^1.0.16",
     "@titanium/authentication-oauth": "^1.0.37",
-    "@titanium/bluebird": "^3.7.26",
+    "@titanium/bluebird": "^3.7.27",
     "@titanium/errors": "^1.0.21",
     "@titanium/essentials": "^1.0.55",
     "@titanium/events": "^1.0.33",
@@ -77,16 +77,16 @@
     "@titanium/identity": "^2.0.26",
     "@titanium/json5": "^1.0.18",
     "@titanium/jsonc": "^1.0.21",
-    "@titanium/jwt": "^1.0.25",
+    "@titanium/jwt": "^1.0.26",
     "@titanium/module-copier": "^1.0.29",
     "@titanium/please": "^1.0.32",
     "@titanium/polyfill": "^1.0.30",
-    "@titanium/querystring": "^1.0.21",
+    "@titanium/querystring": "^1.0.22",
     "@titanium/tiapp-xml": "^1.0.32",
-    "@titanium/titanium": "^5.4.26",
+    "@titanium/titanium": "^5.4.27",
     "@titanium/turbo": "^2.2.47",
     "minimatch": "^3.0.4",
     "nativeloop": "^1.0.15",
-    "tiapp-dir": "^1.0.21"
+    "tiapp-dir": "^1.0.22"
   }
 }
